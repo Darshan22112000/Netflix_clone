@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 const options = {
   headers: {
     accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNjA2YThiZjRhZWNiNTU1NzMxNTc0NWJhMDcyMjg2MCIsInN1YiI6IjY2MDZjMWFhYTg5NGQ2MDE0OTYyMjQwMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zbI-l2Xoj2HzkbA5auCy_nKJJS80zFHrs4C6G0hVZrU'
+    Authorization: ''
   },
   params: {
     include_adult: 'false',
