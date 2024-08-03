@@ -1,0 +1,31 @@
+<app-header 
+    [header_email] ="email" 
+    [header_name]="name" 
+    [header_picture]="profile_picture" 
+></app-header>
+
+<app-banner></app-banner>
+<app-movie-carousel
+    [videoContents]="popularMovies"
+    [title]="'Popular Movies'"
+></app-movie-carousel>
+
+<app-movie-carousel
+    [videoContents]="tvShows"
+    [title]="'TV Shows'"
+></app-movie-carousel>
+
+<app-movie-carousel
+    [videoContents]="topRated"
+    [title]="'Top Rated Movies'"
+></app-movie-carousel>
+
+<app-movie-carousel
+    [videoContents]="upcomingMovies"
+    [title]="'Upcoming Movies'"
+></app-movie-carousel>
+
+<app-movie-carousel
+    [videoContents]="nowPlaying"
+    [title]="'Now Playing Movies'"
+></app-movie-carousel>

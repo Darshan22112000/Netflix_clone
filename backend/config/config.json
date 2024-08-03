@@ -1,0 +1,34 @@
+{
+  "auth_token" : "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNjA2YThiZjRhZWNiNTU1NzMxNTc0NWJhMDcyMjg2MCIsIm5iZiI6MTcyMDc4MTEyOS44Njg4MTgsInN1YiI6IjY2MDZjMWFhYTg5NGQ2MDE0OTYyMjQwMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.74T1odsZRo_KfJGyCWd0zjwxMi1tXaPxiiQQHhkOYKY",
+
+  "default": {
+    "type": "postgres",
+    "driver": "postgresql",
+    "username": "postgres",
+    "password": "root",
+    "host": "localhost",
+    "port": "5432",
+    "database": "tmdb",
+    "schema": "public"
+  },
+  "postgres": {
+    "type": "postgres",
+    "driver": "postgresql",
+    "username": "postgres",
+    "password": "root",
+    "host": "localhost",
+    "port": "5432",
+    "database": "tmdb",
+    "schema": "public"
+  },
+  "mongodb_atlas": {
+    "username": "dap",
+    "password": "dapbi"
+  },
+  "mongodb": {
+    "username": "dap",
+    "password": "dap",
+    "database": "dap",
+    "port": 27017
+  }
+}
