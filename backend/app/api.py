@@ -45,7 +45,7 @@ app.add_middleware(
 )
 
 # This is a scheduled job that will run every 10 seconds.
-@scheduler.scheduled_job('interval', seconds=240) #1 HOUR INTERVAL
+@scheduler.scheduled_job('interval', seconds=2400) #1 HOUR INTERVAL
 def scheduled_job_1():
     asyncio.run(Scheduler.tmdb_refresh())
     print(f'Scheduler ran at:{datetime.datetime.now()}')
