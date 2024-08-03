@@ -9,7 +9,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.memory import MemoryJobStore
 
 from app.app_scheduler import Scheduler
+from app.recommendation import Recommendation
 from app.tmdb import Tmdb
+from app.train import TrainModels
 from database.IO_ops import IO_ops
 
 # class Item(BaseModel):
@@ -45,10 +47,15 @@ app.add_middleware(
 )
 
 # This is a scheduled job that will run every 10 seconds.
-@scheduler.scheduled_job('interval', seconds=2400) #1 HOUR INTERVAL
+@scheduler.scheduled_job('interval', seconds=1000) #1 HOUR INTERVAL
 def scheduled_job_1():
     asyncio.run(Scheduler.tmdb_refresh())
-    print(f'Scheduler ran at:{datetime.datetime.now()}')
+    print(f'Movie Scheduler ran at:{datetime.datetime.now()}')
+
+@scheduler.scheduled_job('interval', seconds=2000)
+def scheduled_job_2():
+    asyncio.run(TrainModels.train_models())
+    print(f'Train Model - Scheduler ran at:{datetime.datetime.now()}')
 
 @app.on_event("startup")
 async def startup_event():
@@ -92,6 +99,16 @@ async def get_top_ratedd_movies():
 async def get_upcoming_movies():
     resp = await IO_ops.get_upcoming_movies()
     return {'results': resp.to_dict(orient='records')}
+
+@app.get("/recommendations/{title}")
+async def recommend_movies(title: str):
+    recommendations = await Recommendation.get_recommendations(title)
+    return {"title": title, "recommendations": recommendations}
+
+@app.get("/train")
+async def get_train():
+    resp = await TrainModels.train_models()
+    return {'results': 'done'}
 
 
 

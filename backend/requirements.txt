@@ -3,3 +3,5 @@ numpy
 fastapi
 sqlalchemy
 apscheduler
+aiohttp
+nltk

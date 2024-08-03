@@ -28,7 +28,7 @@ class Tmdb:
     @classmethod
     def get_movies(cls, scheduler=False):
         res = pd.DataFrame()
-        for i in range(600):
+        for i in range(500):
             url = f"https://api.themoviedb.org/3/discover/movie?page={i+1}"
             auth_token = cls.get_config()['auth_token']
             headers = {
@@ -51,7 +51,7 @@ class Tmdb:
     @classmethod
     def get_tv_shows(cls, scheduler=False):
         res = pd.DataFrame()
-        for i in range(600):
+        for i in range(500):
             url = f"https://api.themoviedb.org/3/discover/tv?page={i + 1}"
             auth_token = cls.get_config()['auth_token']
             headers = {
@@ -176,4 +176,4 @@ class Tmdb:
 # Tmdb.get_top_rated_movies(scheduler=True)
 # Tmdb.get_credits()
 
-
+# Tmdb.get_movies(scheduler=True)

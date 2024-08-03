@@ -108,12 +108,12 @@ class IO_ops():
             DatabaseUtil.close_postgres_session(session)
 
     @classmethod
-    async def get_movies(cls):
+    async def get_movies(cls, all=False):
         session = DatabaseUtil.get_postgres_session()
         sq = session.query(Movies)
         df = pd.read_sql(sq.statement, session.bind)
         DatabaseUtil.close_postgres_session(session)
-        return df.head(1000)
+        return df.head(1000) if not all else df
 
     @classmethod
     async def get_popular_movies(cls):
@@ -124,13 +124,13 @@ class IO_ops():
         return df
 
     @classmethod
-    async def get_tv_shows(cls):
+    async def get_tv_shows(cls, all=False):
         session = DatabaseUtil.get_postgres_session()
         sq = session.query(TVShows)
         df = pd.read_sql(sq.statement, session.bind)
         DatabaseUtil.close_postgres_session(session)
-        df.rename(columns={'name': 'title'}, inplace=True)
-        return df.head(1000)
+        df.rename(columns={'name': 'title', 'first_air_date': 'release_date'}, inplace=True)
+        return df.head(1000) if not all else df
 
     @classmethod
     async def get_top_rated_movies(cls):

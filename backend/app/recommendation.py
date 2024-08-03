@@ -1,52 +1,48 @@
 import asyncio
+from http.client import HTTPException
 
+import joblib
+import requests
 import pandas as pd
 import numpy as np
 import os
-from sklearn.metrics.pairwise import linear_kernel
-from sklearn.feature_extraction.text import TfidfVectorizer
+import difflib
 
-from database.IO_ops import IO_ops
+class Recommendation:
 
+    # Load pre-trained models and data
+    @classmethod
+    async def load_models(cls):
+        # cwd = os.getcwd()
+        # tfidf_path = os.path.join(cwd, 'saved_models', 'tfidf_vectorizer.pkl').replace("\\", '/')
+        # cosine_path = os.path.join(cwd, 'saved_models', 'cosine_similarity_matrix.pkl').replace("\\", '/')
+        # movie_path = os.path.join(cwd, 'saved_models', 'movies_df.pkl').replace("\\", '/')
+        tfidf = joblib.load('app/saved_models/tfidf_vectorizer.pkl')
+        cosine_sim = joblib.load('app/saved_models/cosine_similarity_matrix.pkl')
+        movies_df = joblib.load('app/saved_models/movies_df.pkl')
+        return tfidf, cosine_sim, movies_df
 
+    @classmethod
+    async def get_recommendations(cls, title):
+        tfidf, cosine_sim, movies_df = await cls.load_models()
+        title = title.lower()
+        movies_df['title'] = movies_df['title'].str.lower()
+        if title not in movies_df['title'].values:
+            similar_movies = difflib.get_close_matches(title, movies_df['title'].unique().tolist())
+            if similar_movies:
+                title = similar_movies[0]
+            else:
+                return []
+        idx = movies_df[movies_df['title'] == title].index[0]
+        sim_scores = list(enumerate(cosine_sim[idx]))
+        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+        sim_scores = sim_scores[1:11]
+        movie_indices = [i[0] for i in sim_scores]
+        recommendations = movies_df['title'].iloc[movie_indices].tolist()
+        return recommendations
 
-df1 = asyncio.run(IO_ops.get_tv_shows())
-df2 = asyncio.run(IO_ops.get_movies())
-
-#Define a TF-IDF Vectorizer Object. Remove all english stop words such as 'the', 'a'
-tfidf = TfidfVectorizer(stop_words='english')
-#Replace NaN with an empty string
-df2['overview'] = df2['overview'].fillna('')
-
-#Construct the required TF-IDF matrix by fitting and transforming the data
-tfidf_matrix = tfidf.fit_transform(df2['overview'])
-
-#Output the shape of tfidf_matrix
-tfidf_matrix.shape
-# Compute the cosine similarity matrix
-cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
-
-#Construct a reverse map of indices and movie titles
-indices = pd.Series(df2.index, index=df2['title']).drop_duplicates()
-
-# Function that takes in movie title as input and outputs most similar movies
-def get_recommendations(title, cosine_sim=cosine_sim):
-    # Get the index of the movie that matches the title
-    idx = indices[title]
-
-    # Get the pairwsie similarity scores of all movies with that movie
-    sim_scores = list(enumerate(cosine_sim[idx]))
-
-    # Sort the movies based on the similarity scores
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-
-    # Get the scores of the 10 most similar movies
-    sim_scores = sim_scores[1:11]
-
-    # Get the movie indices
-    movie_indices = [i[0] for i in sim_scores]
-
-    # Return the top 10 most similar movies
-    return df2['title'].iloc[movie_indices]
-
-get_recommendations('The Dark Knight Rises')
+# Test the recommendation function
+# try:
+#     print(asyncio.run(Recommendation.get_recommendations('The Matrix')))
+# except:
+#     print('Result Not Found')
