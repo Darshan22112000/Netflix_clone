@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { HeaderComponent } from "../../core/components/header/header.component";
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
     imports: [CommonModule, HeaderComponent, BannerComponent, MovieCarouselComponent]
 })
 export class BrowseComponent implements OnInit{
-  constructor(private auth: AuthService, private movieService: MovieService) { }
+  constructor(private auth: AuthService, private movieService: MovieService, private cd: ChangeDetectorRef) { }
   
   name = JSON.parse(sessionStorage.getItem("loggedInUser")!).name
   email = JSON.parse(sessionStorage.getItem("loggedInUser")!).email
@@ -25,6 +25,8 @@ export class BrowseComponent implements OnInit{
   
   
   movies: IVideoContent[] = [];
+  movieTitles: string[] = [];
+  tvShowTitles: string[] = [];
   tvShows: IVideoContent[] = [];
   topRated: IVideoContent[] = [];
   nowPlaying: IVideoContent[] = [];
@@ -45,10 +47,14 @@ export class BrowseComponent implements OnInit{
   ngOnInit(): void {
     this.movieService.getMovies().subscribe(res=>{
       this.movies = res.results;
+      this.movieTitles = this.movies.map(movie => movie.title);
+      this.cd.detectChanges();
     })
 
     this.movieService.getTvShows().subscribe(res=>{
       this.tvShows = res.results;
+      this.tvShowTitles = this.tvShows.map(tvShow => tvShow.title);
+      this.cd.detectChanges();
     })
 
     this.movieService.getTopRated().subscribe(res=>{

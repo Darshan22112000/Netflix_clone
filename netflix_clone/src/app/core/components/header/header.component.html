@@ -1,4 +1,4 @@
-<header class="h-[55px] bg-gray-900 z-10 dark-nav sticky top-0 flex items-center justify-between px-5">
+<!-- <header class="h-[55px] bg-gray-900 z-10 dark-nav sticky top-0 flex items-center justify-between px-5">
     <div class="flex gap-5">
         <img width="110" src="./assets/img/Netflix_Logo_RGB.png" alt="netflix_logo">
         <ul class="flex items-center" 
@@ -20,4 +20,42 @@
         <a class="cursor-pointer" (click)="signOut()">Signout</a>
     </div>
 </header>
+ -->
+
+ <header class="h-[55px] bg-gray-900 z-10 dark-nav sticky top-0 flex items-center justify-between px-5">
+    <div class="flex gap-5">
+        <img width="110" src="./assets/img/Netflix_Logo_RGB.png" alt="netflix_logo">
+        <ul class="flex items-center" *ngFor="let item of navlist">
+            <li class="text-neutral-100 cursor-pointer text-sm font-extralight hover:text-gray-400 transition-[0.5s]">{{item}}</li>
+        </ul>
+    </div>
+
+    <div class="flex gap-5">
+        <!-- Search Bar -->
+        <div class="flex items-center">
+            <mat-form-field>
+                <mat-label>Search</mat-label>
+                <input type="text" matInput [formControl]="searchControl" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let movie of filteredMovies | async" [value]="movie">
+                        {{ movie }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="onSearch()">Search</button>
+        </div>
+
+        <div class="text-white text-sm flex items-center gap-2">
+            <div class="flex items-center gap-1">
+                <img class="w-8 h-8 rounded-full mx-auto" [src]="header_picture">
+                <a (click)="toggleProfile()">
+                    <span class="text-neutral-100 cursor-pointer text-sm"><strong>{{header_name}}</strong></span>
+                </a>
+            </div>
+            &nbsp; | &nbsp;
+            <a class="cursor-pointer" (click)="signOut()">Signout</a>
+        </div>
+    </div>
+</header>
+
 
