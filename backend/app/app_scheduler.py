@@ -36,7 +36,7 @@ class Scheduler:
         top_rated_movies = response_dict['top_rated_movies']
         popular_movies = response_dict['popular_movies']
         upcoming_movies = response_dict['upcoming_movies']
-        cast = response_dict['cast']
+        # cast = response_dict['cast']
         # crew = response_dict['crew']
         # keywords = response_dict['keywords']
 

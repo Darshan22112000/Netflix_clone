@@ -34,7 +34,9 @@ origins = [
     "http://localhost:3000",
     "localhost:3000",
     "http://localhost:4200",
-    "localhost:4200"
+    "localhost:4200",
+    "http://localhost:8000",
+    "localhost:8000"
 ]
 
 
@@ -47,12 +49,12 @@ app.add_middleware(
 )
 
 # This is a scheduled job that will run every 10 seconds.
-@scheduler.scheduled_job('interval', seconds=1000) #1 HOUR INTERVAL
+@scheduler.scheduled_job('interval', seconds=2000) #1 HOUR INTERVAL
 def scheduled_job_1():
     asyncio.run(Scheduler.tmdb_refresh())
     print(f'Movie Scheduler ran at:{datetime.datetime.now()}')
 
-@scheduler.scheduled_job('interval', seconds=2000)
+@scheduler.scheduled_job('interval', seconds=2500)
 def scheduled_job_2():
     asyncio.run(TrainModels.train_models())
     print(f'Train Model - Scheduler ran at:{datetime.datetime.now()}')
@@ -103,7 +105,8 @@ async def get_upcoming_movies():
 @app.get("/recommendations/{title}")
 async def recommend_movies(title: str):
     recommendations = await Recommendation.get_recommendations(title)
-    return {"title": title, "recommendations": recommendations}
+    # return {"title": title, "recommendations": recommendations}
+    return recommendations
 
 @app.get("/train")
 async def get_train():

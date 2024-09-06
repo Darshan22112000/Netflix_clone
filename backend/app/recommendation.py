@@ -39,7 +39,12 @@ class Recommendation:
         sim_scores = sim_scores[1:11]
         movie_indices = [i[0] for i in sim_scores]
         recommendations = movies_df['title'].iloc[movie_indices].tolist()
-        return recommendations
+        recommended_movies = movies_df.iloc[movie_indices]
+        title_movie = movies_df.iloc[[idx]]
+        return {
+            'search_result': title_movie.to_dict(orient='records'),
+            'recommended_movies': recommended_movies.to_dict(orient='records')
+            }
 
 # Test the recommendation function
 # try:
