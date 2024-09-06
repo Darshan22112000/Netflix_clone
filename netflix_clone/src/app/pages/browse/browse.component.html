@@ -1,33 +1,64 @@
 <app-header 
-    [header_email] ="email" 
-    [header_name]="name" 
-    [header_picture]="profile_picture" 
-    [movieTitles]="movieTitles"
-    [tvShowsTitles]="tvShowTitles"
+        [header_email]="email" 
+        [header_name]="name" 
+        [header_picture]="profile_picture" 
+        [movieTitles]="movieTitles"
+        [tvShowsTitles]="tvShowTitles"
+        (recommendedMoviesChange)="onRecommendedMoviesChange($event)"
+        (loadingChange)="onLoadingChange($event)"
 ></app-header>
 
-<app-banner></app-banner>
-<app-movie-carousel
-    [videoContents]="popularMovies"
-    [title]="'Popular Movies'"
-></app-movie-carousel>
 
-<app-movie-carousel
-    [videoContents]="tvShows"
-    [title]="'TV Shows'"
-></app-movie-carousel>
+<ng-container *ngIf="recommendedMovies && recommendedMovies.length > 0 && searchResult && 
+searchResult.length > 0 ; else showAll">
+    <app-movie-carousel
+        [videoContents]="searchResult"
+        [title]="'Search Result'"
+    ></app-movie-carousel>
 
-<app-movie-carousel
-    [videoContents]="topRated"
-    [title]="'Top Rated Movies'"
-></app-movie-carousel>
+    <app-movie-carousel
+        [videoContents]="recommendedMovies"
+        [title]="'Recommended Movies'"
+    ></app-movie-carousel>
+    
+    <!-- Loader -->
+    <div *ngIf="loading" class="loader-container">
+      <div class="loader"></div>
+    </div>
+</ng-container>
 
-<app-movie-carousel
-    [videoContents]="upcomingMovies"
-    [title]="'Upcoming Movies'"
-></app-movie-carousel>
+<!-- Show this block when there are no recommended movies -->
+<ng-template #showAll>
+  
+    <app-banner></app-banner>
+  
+    <app-movie-carousel
+        [videoContents]="popularMovies"
+        [title]="'Popular Movies'"
+    ></app-movie-carousel>
+  
+    <app-movie-carousel
+        [videoContents]="tvShows"
+        [title]="'TV Shows'"
+    ></app-movie-carousel>
+  
+    <app-movie-carousel
+        [videoContents]="topRated"
+        [title]="'Top Rated Movies'"
+    ></app-movie-carousel>
+  
+    <app-movie-carousel
+        [videoContents]="upcomingMovies"
+        [title]="'Upcoming Movies'"
+    ></app-movie-carousel>
+  
+    <app-movie-carousel
+        [videoContents]="nowPlaying"
+        [title]="'Now Playing Movies'"
+    ></app-movie-carousel>
 
-<app-movie-carousel
-    [videoContents]="nowPlaying"
-    [title]="'Now Playing Movies'"
-></app-movie-carousel>
+    <!-- Loader -->
+    <div *ngIf="loading" class="loader-container">
+      <div class="loader"></div>
+    </div>
+</ng-template>

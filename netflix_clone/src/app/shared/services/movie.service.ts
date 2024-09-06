@@ -49,4 +49,10 @@ export class MovieService {
     const url = `${environment.serverUrl}/get_upcoming_movies`;
     return this.http.get<any>(url);
   }
+
+  public getRecommendations = (param: any) => {
+      const url = `${environment.serverUrl}/recommendations/${param}`;
+      return this.http.get(url);
+  }
+
 }

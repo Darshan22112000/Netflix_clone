@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, Input } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { HeaderComponent } from "../../core/components/header/header.component";
 import { CommonModule } from '@angular/common';
@@ -33,6 +33,10 @@ export class BrowseComponent implements OnInit{
   ratedMovies: IVideoContent[] = [];
   upcomingMovies: IVideoContent[] = [];
   popularMovies: IVideoContent[] = [];
+  recommendedMovies: any[] = [];
+  searchResult: any[] = [];
+  loading: boolean = false;
+ 
 
   // sources = [
   //   this.movieService.getMovies(),
@@ -84,6 +88,22 @@ export class BrowseComponent implements OnInit{
     sessionStorage.removeItem("loggedInUser");
     this.auth.signOut();
   }
+
+  onRecommendedMoviesChange(movies: any) {
+    if (movies){
+      this.recommendedMovies = movies['recommended_movies']; 
+      this.searchResult = movies['search_result'];
+    }
+    else {
+      this.recommendedMovies = [];
+      this.searchResult = [];
+    }
+  }
+
+  onLoadingChange(loadingState: boolean) {
+    this.loading = loadingState;
+  }
+
 }
   
 

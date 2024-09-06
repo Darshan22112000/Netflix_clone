@@ -24,9 +24,12 @@
 
  <header class="h-[55px] bg-gray-900 z-10 dark-nav sticky top-0 flex items-center justify-between px-5">
     <div class="flex gap-5">
-        <img width="110" src="./assets/img/Netflix_Logo_RGB.png" alt="netflix_logo">
+        <img width="110" src="./assets/img/Netflix_Logo_RGB.png" alt="netflix_logo" (click)="resetSearch()" class="cursor-pointer">
         <ul class="flex items-center" *ngFor="let item of navlist">
-            <li class="text-neutral-100 cursor-pointer text-sm font-extralight hover:text-gray-400 transition-[0.5s]">{{item}}</li>
+            <li class="text-neutral-100 cursor-pointer text-sm font-extralight hover:text-gray-400 transition-[0.5s]"
+            (click)="onNavItemClick(item)">
+            {{item}}
+        </li>
         </ul>
     </div>
 
@@ -34,7 +37,7 @@
         <!-- Search Bar -->
         <div class="flex items-center">
             <mat-form-field>
-                <mat-label>Search</mat-label>
+                <mat-label></mat-label>
                 <input type="text" matInput [formControl]="searchControl" [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let movie of filteredMovies | async" [value]="movie">
@@ -42,7 +45,13 @@
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="onSearch()">Search</button>
+            <!-- <button class="mx-2 bg-gray-600 text-white py-2 px-6 text-xs rounded-lg hover:bg-opacity-70 transition-[1s]" color="primary" (click)="onSearch()">Search</button> -->
+            
+            <!-- Disable button and show loading state -->
+            <button class="mx-2 bg-gray-600 text-white py-2 px-6 text-xs rounded-lg hover:bg-opacity-70 transition-[1s]" color="primary" (click)="onSearch()" [disabled]="loading">
+                Search
+            </button>
+        
         </div>
 
         <div class="text-white text-sm flex items-center gap-2">

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { BrowseComponent } from '../../../pages/browse/browse.component';
 import { AuthService } from '../../../shared/services/auth.service';
 import { ProfileService } from '../../services/profile.service';
@@ -10,6 +10,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete'; 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { IVideoContent } from '../../../shared/models/video_content.interface';
+import { MovieService } from '../../../shared/services/movie.service'; 
+import { error } from 'console';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +22,13 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  constructor(private auth: AuthService, private profileService: ProfileService) { }
+  recommendedMovies: any;
+
+  // Define an EventEmitter to emit recommendedMovies
+  @Output() recommendedMoviesChange: EventEmitter<any[]> = new EventEmitter<any[]>();
+  @Output() loadingChange = new EventEmitter<boolean>();
+
+  constructor(private auth: AuthService, private profileService: ProfileService, private movieService: MovieService) { }
   profile: boolean = false;
   @Input() movieTitles: string[] = []; // Add this input
   @Input() tvShowsTitles: string[] = []; // Add this input
@@ -31,6 +40,7 @@ export class HeaderComponent {
   
   searchControl = new FormControl();
   filteredMovies: Observable<string[]> | undefined;
+  loading: boolean = false;
 
   ngOnInit() {
     // this.filteredMovies = this.searchControl.valueChanges.pipe(
@@ -75,13 +85,39 @@ export class HeaderComponent {
   }
 
   onSearch() {
+    this.loading = true;
+    this.loadingChange.emit(this.loading);
     const searchValue = this.searchControl.value;
     if (searchValue && this.combinedList.includes(searchValue)) {
-      console.log(`Searching for movie: ${searchValue}`);
       // Implement the actual search functionality here
+      this.movieService.getRecommendations(searchValue).subscribe(res=>{
+        this.recommendedMovies = res;
+        // this.recommendedMovies = this.recommendedMovies.recommended_movies;
+        this.recommendedMoviesChange.emit(this.recommendedMovies);
+        setTimeout(() => {
+          this.loading = false;
+          this.loadingChange.emit(this.loading);  // Emit false when search completes
+        }, 500);  // Simulate a 3-second delay
+      },(error)=>{
+        console.error('Search error:', error);
+        this.loading = false;
+        this.loadingChange.emit(this.loading);
+      })
     } else {
-      console.log('Movie not found');
+      
     }
+  }
+
+  onNavItemClick(item: string) {
+    if (item === 'Home') {
+      this.resetSearch();
+    }
+  }
+
+  resetSearch() {
+    this.searchControl.setValue('');
+    this.recommendedMovies = null;
+    this.recommendedMoviesChange.emit(this.recommendedMovies);
   }
 
 }
