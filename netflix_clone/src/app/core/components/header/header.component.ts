@@ -88,7 +88,8 @@ export class HeaderComponent {
     this.loading = true;
     this.loadingChange.emit(this.loading);
     const searchValue = this.searchControl.value;
-    if (searchValue && this.combinedList.includes(searchValue)) {
+    // if (searchValue && this.combinedList.includes(searchValue)) {
+    if (searchValue) {
       // Implement the actual search functionality here
       this.movieService.getRecommendations(searchValue).subscribe(res=>{
         this.recommendedMovies = res;
@@ -103,9 +104,7 @@ export class HeaderComponent {
         this.loading = false;
         this.loadingChange.emit(this.loading);
       })
-    } else {
-      
-    }
+    } 
   }
 
   onNavItemClick(item: string) {

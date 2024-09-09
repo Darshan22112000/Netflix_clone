@@ -9,12 +9,17 @@
 ></app-header>
 
 
-<ng-container *ngIf="recommendedMovies && recommendedMovies.length > 0 && searchResult && 
-searchResult.length > 0 ; else showAll">
-    <app-movie-carousel
+<ng-container *ngIf="recommendedMovies && recommendedMovies.length > 0 ; else showAll">
+    <app-movie-carousel *ngIf="searchResult && searchResult.length > 0; else noSearchResult"
         [videoContents]="searchResult"
         [title]="'Search Result'"
     ></app-movie-carousel>
+    <ng-template #noSearchResult>
+        <app-movie-carousel 
+            [title]="'Search Result'"
+        ></app-movie-carousel>
+        <p class="text-white text-2xl text-center mt-10">No search result found</p>
+    </ng-template>
 
     <app-movie-carousel
         [videoContents]="recommendedMovies"
