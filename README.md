@@ -58,7 +58,7 @@ This project is a **Netflix Clone** application that mimics the core functionali
 2. **Frontend Setup (Angular)**:
     - Navigate to the `frontend` folder and install dependencies:
       ```bash
-      cd frontend
+      cd netflix_clone
       npm install
       ```
     - Run the Angular development server:
