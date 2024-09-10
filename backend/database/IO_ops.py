@@ -108,11 +108,13 @@ class IO_ops():
             DatabaseUtil.close_postgres_session(session)
 
     @classmethod
-    async def get_movies(cls, all=False):
+    async def get_movies(cls, all=False, titles=None):
         session = DatabaseUtil.get_postgres_session()
         sq = session.query(Movies)
         df = pd.read_sql(sq.statement, session.bind)
         DatabaseUtil.close_postgres_session(session)
+        if titles:
+            df = df.loc[df['title'].str.lower().isin(titles)].drop_duplicates(['title'])
         return df.head(1000) if not all else df
 
     @classmethod

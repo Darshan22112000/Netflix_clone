@@ -8,6 +8,9 @@ import numpy as np
 import os
 import difflib
 
+from database.IO_ops import IO_ops
+
+
 class Recommendation:
 
     # Load pre-trained models and data
@@ -39,8 +42,10 @@ class Recommendation:
         sim_scores = sim_scores[1:11]
         movie_indices = [i[0] for i in sim_scores]
         recommendations = movies_df['title'].iloc[movie_indices].tolist()
-        recommended_movies = movies_df.iloc[movie_indices]
-        title_movie = movies_df.iloc[[idx]]
+        # recommended_movies = movies_df.iloc[movie_indices]
+        # title_movie = movies_df.iloc[[idx]]
+        recommended_movies = await IO_ops.get_movies(titles=recommendations)
+        title_movie = await IO_ops.get_movies(titles=[title])
         return {
             'search_result': title_movie.to_dict(orient='records'),
             'recommended_movies': recommended_movies.to_dict(orient='records')
